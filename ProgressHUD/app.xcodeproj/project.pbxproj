@@ -13,9 +13,12 @@
 		29D29EF91D9A59E4006CA074 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D29EF81D9A59E4006CA074 /* AppDelegate.swift */; };
 		29D29F011D9A59E4006CA074 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29D29F001D9A59E4006CA074 /* Assets.xcassets */; };
 		29D29F041D9A59E4006CA074 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29D29F021D9A59E4006CA074 /* LaunchScreen.storyboard */; };
+		55BC2C0129ADAA0400963A7A /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55BC2C0029ADAA0400963A7A /* images.xcassets */; };
+		FD00B05E967DC4D0F7978F80 /* Pods_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D900BDE586D9181DC23AC9 /* Pods_app.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0740CDF5CF062290B215B555 /* Pods-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app.debug.xcconfig"; path = "Target Support Files/Pods-app/Pods-app.debug.xcconfig"; sourceTree = "<group>"; };
 		295B8480248C1C5B003E8AE6 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		295B8481248C1C5B003E8AE6 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		299876DA248FCB290025E297 /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
@@ -24,6 +27,9 @@
 		29D29F001D9A59E4006CA074 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		29D29F031D9A59E4006CA074 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		29D29F051D9A59E4006CA074 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		55BC2C0029ADAA0400963A7A /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
+		C6144F5AE36DA2BFE3CFD715 /* Pods-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app.release.xcconfig"; path = "Target Support Files/Pods-app/Pods-app.release.xcconfig"; sourceTree = "<group>"; };
+		E3D900BDE586D9181DC23AC9 /* Pods_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD00B05E967DC4D0F7978F80 /* Pods_app.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +48,7 @@
 			isa = PBXGroup;
 			children = (
 				299876DA248FCB290025E297 /* ProgressHUD.swift */,
+				55BC2C0029ADAA0400963A7A /* images.xcassets */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -51,6 +59,8 @@
 				299876D9248FCB290025E297 /* Sources */,
 				29D29EF31D9A59E4006CA074 /* app */,
 				29D29EF21D9A59E4006CA074 /* Products */,
+				C0C957457AB97245F4ECFB77 /* Pods */,
+				57F371064E046C8C535DC804 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,6 +85,24 @@
 			path = app;
 			sourceTree = "<group>";
 		};
+		57F371064E046C8C535DC804 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E3D900BDE586D9181DC23AC9 /* Pods_app.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C0C957457AB97245F4ECFB77 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0740CDF5CF062290B215B555 /* Pods-app.debug.xcconfig */,
+				C6144F5AE36DA2BFE3CFD715 /* Pods-app.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -82,9 +110,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 29D29F081D9A59E4006CA074 /* Build configuration list for PBXNativeTarget "app" */;
 			buildPhases = (
+				472D6587E59A452DBCE20C2D /* [CP] Check Pods Manifest.lock */,
 				29D29EED1D9A59E4006CA074 /* Sources */,
 				29D29EEE1D9A59E4006CA074 /* Frameworks */,
 				29D29EEF1D9A59E4006CA074 /* Resources */,
+				F64EB42A9F25DA01EFBEA497 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -146,12 +176,56 @@
 			buildActionMask = 2147483647;
 			files = (
 				29D29F041D9A59E4006CA074 /* LaunchScreen.storyboard in Resources */,
+				55BC2C0129ADAA0400963A7A /* images.xcassets in Resources */,
 				295B8482248C1C5B003E8AE6 /* ViewController.xib in Resources */,
 				29D29F011D9A59E4006CA074 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		472D6587E59A452DBCE20C2D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-app-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F64EB42A9F25DA01EFBEA497 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-app/Pods-app-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/LookinServer/LookinServer.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LookinServer.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-app/Pods-app-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		29D29EED1D9A59E4006CA074 /* Sources */ = {
@@ -291,6 +365,7 @@
 		};
 		29D29F091D9A59E4006CA074 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0740CDF5CF062290B215B555 /* Pods-app.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
@@ -304,7 +379,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = app/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 13.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.relatedcode.progresshud;
@@ -322,6 +397,7 @@
 		};
 		29D29F0A1D9A59E4006CA074 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C6144F5AE36DA2BFE3CFD715 /* Pods-app.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
@@ -334,7 +410,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = app/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 13.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.relatedcode.progresshud;

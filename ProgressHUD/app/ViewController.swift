@@ -100,8 +100,7 @@ class ViewController: UITableViewController {
 		actions6.append("Cart")
 		actions6.append("Search")
 
-		ProgressHUD.colorAnimation = .systemBlue
-		ProgressHUD.colorProgress = .systemBlue
+	
 	}
 
 	// MARK: - Progress methods
@@ -221,7 +220,7 @@ extension ViewController {
 		if (indexPath.section == 1) {
 			if (indexPath.row == 0) { ProgressHUD.show();			status = nil				}
 			if (indexPath.row == 1) { ProgressHUD.show(textShort);	status = textShort			}
-			if (indexPath.row == 2) { ProgressHUD.show(textLong);	status = textLong			}
+			if (indexPath.row == 2) { ProgressHUD.show(textLong, interaction: true);	status = textLong			}
 		}
 
 		if (indexPath.section == 2)	{
@@ -269,6 +268,7 @@ extension ViewController {
 		}
 
 		if (indexPath.section == 7) {
+            if #available(iOS 13.0, *) {
 			if (indexPath.row == 0) { ProgressHUD.show(icon: .heart)							}
 			if (indexPath.row == 1) { ProgressHUD.show(icon: .doc)								}
 			if (indexPath.row == 2) { ProgressHUD.show(icon: .bookmark)							}
@@ -287,7 +287,9 @@ extension ViewController {
 			if (indexPath.row == 15) { ProgressHUD.show(icon: .dislike)							}
 			if (indexPath.row == 16) { ProgressHUD.show(icon: .privacy)							}
 			if (indexPath.row == 17) { ProgressHUD.show(icon: .cart)							}
-			if (indexPath.row == 18) { ProgressHUD.show(icon: .search)							}
+                if (indexPath.row == 18) { ProgressHUD.show(icon: .search)
+                }
+            }
 		}
 	}
 }
