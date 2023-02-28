@@ -15,6 +15,7 @@ import UIKit
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 public enum AnimationType {
+    case none
     case systemActivityIndicator
     case horizontalCirclesPulse
     case lineScaling
@@ -168,9 +169,9 @@ public extension ProgressHUD {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------------------------
-    class func show(_ status: String? = nil, interaction: Bool = true) {
+    class func show(_ status: String? = nil, interaction: Bool = true, delay: TimeInterval? = nil) {
         DispatchQueue.main.async {
-            shared.setup(status: status, hide: false, interaction: interaction)
+            shared.setup(status: status, hide: true, interaction: interaction, delay: delay)
         }
     }
 
@@ -251,6 +252,13 @@ public extension ProgressHUD {
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 public class ProgressHUD: UIView {
+    
+    private class var bundle: Bundle? {
+        let main = Bundle.main
+        let module = "ProgressHUD"
+        return Bundle(path: main.bundlePath.appending("/Frameworks/\(module).framework/\(module).bundle"))
+    }
+    
     /// HUD的容器toolbar的样式
     private var hudBarStyle: UIBarStyle = .black
     /// HUD的容器toolbar是否透明
@@ -274,10 +282,10 @@ public class ProgressHUD: UIView {
     private var colorAnimation = UIColor.white
     private var colorProgress = UIColor.white
 
-    private var fontStatus = UIFont.boldSystemFont(ofSize: 24)
+    private var fontStatus = UIFont.systemFont(ofSize: 20)
 
-    private var imageSuccess = UIImage(named: "icon_status_success")!
-    private var imageError = UIImage(named: "icon_status_fail")!
+    private var imageSuccess = UIImage(named: "icon_status_success", in: ProgressHUD.bundle, compatibleWith: nil)!
+    private var imageError = UIImage(named: "icon_status_fail", in: ProgressHUD.bundle, compatibleWith: nil)!
 
     private let keyboardWillShow = UIResponder.keyboardWillShowNotification
     private let keyboardWillHide = UIResponder.keyboardWillHideNotification
@@ -416,7 +424,10 @@ public class ProgressHUD: UIView {
         viewProgress?.removeFromSuperview()
         viewAnimatedIcon?.removeFromSuperview()
         staticImageView?.removeFromSuperview()
-
+        guard animationType != .none else {
+            viewAnimation?.removeFromSuperview()
+            return
+        }
         if viewAnimation == nil {
             viewAnimation = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         }
@@ -451,7 +462,7 @@ public class ProgressHUD: UIView {
         viewProgress?.removeFromSuperview()
         viewAnimation?.removeFromSuperview()
         staticImageView?.removeFromSuperview()
-
+        guard let icon = animatedIcon else {return}
         if viewAnimatedIcon == nil {
             viewAnimatedIcon = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
         }
@@ -464,9 +475,14 @@ public class ProgressHUD: UIView {
             $0.removeFromSuperlayer()
         }
 
-        if animatedIcon == .succeed { animatedIconSucceed(viewAnimatedIcon!) }
-        if animatedIcon == .failed { animatedIconFailed(viewAnimatedIcon!) }
-        if animatedIcon == .added { animatedIconAdded(viewAnimatedIcon!) }
+        switch icon {
+        case .succeed:
+            animatedIconSucceed(viewAnimatedIcon!)
+        case .failed:
+            animatedIconFailed(viewAnimatedIcon!)
+        case .added:
+            animatedIconAdded(viewAnimatedIcon!)
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------------------------
@@ -474,7 +490,9 @@ public class ProgressHUD: UIView {
         viewProgress?.removeFromSuperview()
         viewAnimation?.removeFromSuperview()
         viewAnimatedIcon?.removeFromSuperview()
-
+        guard let image = staticImage else {
+            return
+        }
         if staticImageView == nil {
             staticImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         }
@@ -483,7 +501,7 @@ public class ProgressHUD: UIView {
             toolbarHUD?.addSubview(staticImageView!)
         }
 
-        staticImageView?.image = staticImage
+        staticImageView?.image = image
         staticImageView?.contentMode = .scaleAspectFit
     }
 
@@ -494,18 +512,23 @@ public class ProgressHUD: UIView {
         var width: CGFloat = 120
         var height: CGFloat = 120
 
+        let showAnimateView = viewAnimation?.superview != nil
         if let text = labelStatus?.text {
             let sizeMax = CGSize(width: 250, height: 250)
             let attributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: labelStatus?.font as Any]
             var rectLabel = text.boundingRect(with: sizeMax, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
 
             width = ceil(rectLabel.size.width) + 60
-            height = ceil(rectLabel.size.height) + 120
+            height = ceil(rectLabel.size.height) + (showAnimateView ? 120 : 40)
 
             if width < 120 { width = 120 }
-
+            
             rectLabel.origin.x = (width - rectLabel.size.width)/2
-            rectLabel.origin.y = (height - rectLabel.size.height)/2 + 45
+            if showAnimateView {
+                rectLabel.origin.y = (height - rectLabel.size.height) / 2 + 45
+            } else {
+                rectLabel.origin.y = (height - rectLabel.size.height) / 2
+            }
 
             labelStatus?.frame = rectLabel
         }
