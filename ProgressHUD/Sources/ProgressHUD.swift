@@ -94,6 +94,7 @@ extension AlertIcon {
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 public extension ProgressHUD {
+    
     class var animationType: AnimationType {
         get { shared.animationType }
         set { shared.animationType = newValue }
@@ -294,6 +295,26 @@ public class ProgressHUD: UIView {
 
     private let orientationDidChange = UIDevice.orientationDidChangeNotification
 
+    enum TopViewType {
+        case none
+        case progress // 进度
+        case animation // 绘制的动画
+        case icon // 典型的成功失败 感觉应该跟上边归成一类
+        case image // 静态图片
+        
+        var size: CGSize {
+            switch self {
+            case .none:
+                return .zero
+            case .image, .animation:
+                return CGSize(width: 60, height: 60)
+            case .icon, .progress:
+                return CGSize(width: 70, height: 70)
+            }
+        }
+    }
+    
+    private var topViewType: TopViewType = .none
     // -------------------------------------------------------------------------------------------------------------------------------------------
     static let shared: ProgressHUD = {
         let instance = ProgressHUD()
@@ -327,10 +348,23 @@ public class ProgressHUD: UIView {
         setupToolbar()
         setupLabel(status)
 
-        if progress == nil, animatedIcon == nil, staticImage == nil { setupAnimation() }
-        if progress != nil, animatedIcon == nil, staticImage == nil { setupProgress(progress) }
-        if progress == nil, animatedIcon != nil, staticImage == nil { setupAnimatedIcon(animatedIcon) }
-        if progress == nil, animatedIcon == nil, staticImage != nil { setupStaticImage(staticImage) }
+        topViewType = .none
+        if progress == nil, animatedIcon == nil, staticImage == nil {
+            topViewType = .animation
+            setupAnimation()
+        }
+        if progress != nil, animatedIcon == nil, staticImage == nil {
+            topViewType = .progress
+            setupProgress(progress)
+        }
+        if progress == nil, animatedIcon != nil, staticImage == nil {
+            topViewType = .icon
+            setupAnimatedIcon(animatedIcon)
+        }
+        if progress == nil, animatedIcon == nil, staticImage != nil {
+            topViewType = .image
+            setupStaticImage(staticImage)
+        }
 
         setupSize()
         setupPosition()
@@ -409,7 +443,7 @@ public class ProgressHUD: UIView {
 
         if viewProgress == nil {
             viewProgress = ProgressView(colorProgress)
-            viewProgress?.frame = CGRect(x: 0, y: 0, width: 70, height: 70)
+            viewProgress?.frame = CGRect(origin: .zero, size: topViewType.size)
         }
 
         if viewProgress?.superview == nil {
@@ -429,7 +463,7 @@ public class ProgressHUD: UIView {
             return
         }
         if viewAnimation == nil {
-            viewAnimation = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+            viewAnimation = UIView(frame: CGRect(origin: .zero, size: topViewType.size))
         }
 
         if viewAnimation?.superview == nil {
@@ -464,7 +498,7 @@ public class ProgressHUD: UIView {
         staticImageView?.removeFromSuperview()
         guard let icon = animatedIcon else {return}
         if viewAnimatedIcon == nil {
-            viewAnimatedIcon = UIView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
+            viewAnimatedIcon = UIView(frame: CGRect(origin: .zero, size: topViewType.size))
         }
 
         if viewAnimatedIcon?.superview == nil {
@@ -494,7 +528,7 @@ public class ProgressHUD: UIView {
             return
         }
         if staticImageView == nil {
-            staticImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+            staticImageView = UIImageView(frame: CGRect(origin: .zero, size: topViewType.size))
         }
 
         if staticImageView?.superview == nil {
@@ -509,41 +543,54 @@ public class ProgressHUD: UIView {
 
     // -------------------------------------------------------------------------------------------------------------------------------------------
     private func setupSize() {
-        var width: CGFloat = 120
-        var height: CGFloat = 120
+        
+        var width: CGFloat
+        var height: CGFloat
 
-        let showAnimateView = viewAnimation?.superview != nil
         if let text = labelStatus?.text {
+            let edgeInsets = UIEdgeInsets(top: 20, left: 30, bottom: 20, right: 30)
+            let space: CGFloat = topViewType == .none ? 0 : 20
             let sizeMax = CGSize(width: 250, height: 250)
             let attributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: labelStatus?.font as Any]
             var rectLabel = text.boundingRect(with: sizeMax, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
 
-            width = ceil(rectLabel.size.width) + 60
-            height = ceil(rectLabel.size.height) + (showAnimateView ? 120 : 40)
+            width = ceil(rectLabel.size.width) + edgeInsets.left + edgeInsets.right
+            height = ceil(rectLabel.size.height) + edgeInsets.top + edgeInsets.bottom + space + topViewType.size.height
 
-            if width < 120 { width = 120 }
+//            if width < 120 { width = 120 }
             
             rectLabel.origin.x = (width - rectLabel.size.width)/2
-            if showAnimateView {
-                rectLabel.origin.y = (height - rectLabel.size.height) / 2 + 45
-            } else {
+            if topViewType == .none {
                 rectLabel.origin.y = (height - rectLabel.size.height) / 2
+            } else {
+                rectLabel.origin.y = height - edgeInsets.bottom - rectLabel.size.height
             }
-
             labelStatus?.frame = rectLabel
+            
+            let centerX = width / 2
+            var centerY = edgeInsets.top + topViewType.size.height / 2
+
+            viewProgress?.center = CGPoint(x: centerX, y: centerY)
+            viewAnimation?.center = CGPoint(x: centerX, y: centerY)
+            viewAnimatedIcon?.center = CGPoint(x: centerX, y: centerY)
+            staticImageView?.center = CGPoint(x: centerX, y: centerY)
+            
+        } else {
+            let space: CGFloat = 20
+            width = topViewType.size.width + space * 2
+            height = topViewType.size.height + space * 2
+            
+            let centerX = width / 2
+            var centerY = height / 2
+
+            viewProgress?.center = CGPoint(x: centerX, y: centerY)
+            viewAnimation?.center = CGPoint(x: centerX, y: centerY)
+            viewAnimatedIcon?.center = CGPoint(x: centerX, y: centerY)
+            staticImageView?.center = CGPoint(x: centerX, y: centerY)
         }
 
         toolbarHUD?.bounds = CGRect(x: 0, y: 0, width: width, height: height)
 
-        let centerX = width/2
-        var centerY = height/2
-
-        if labelStatus?.text != nil { centerY = 55 }
-
-        viewProgress?.center = CGPoint(x: centerX, y: centerY)
-        viewAnimation?.center = CGPoint(x: centerX, y: centerY)
-        viewAnimatedIcon?.center = CGPoint(x: centerX, y: centerY)
-        staticImageView?.center = CGPoint(x: centerX, y: centerY)
     }
 
     // -------------------------------------------------------------------------------------------------------------------------------------------
