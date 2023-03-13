@@ -350,7 +350,7 @@ public class ProgressHUD: UIView {
 
         topViewType = .none
         if progress == nil, animatedIcon == nil, staticImage == nil {
-            topViewType = .animation
+            topViewType = ProgressHUD.animationType == .none ? .none : .animation
             setupAnimation()
         }
         if progress != nil, animatedIcon == nil, staticImage == nil {
