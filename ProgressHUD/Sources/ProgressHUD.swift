@@ -175,6 +175,13 @@ public extension ProgressHUD {
             shared.setup(status: status, hide: true, interaction: interaction, delay: delay)
         }
     }
+    
+    // -------------------------------------------------------------------------------------------------------------------------------------------
+    class func show(_ status: String? = nil, hide: Bool, interaction: Bool = true, delay: TimeInterval? = nil) {
+        DispatchQueue.main.async {
+            shared.setup(status: status, hide: hide, interaction: interaction, delay: delay)
+        }
+    }
 
     // MARK: - Animated Icon
 
