@@ -12,9 +12,8 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
     'ProgressHUD' => ['ProgressHUD/Sources/images.xcassets']
   }
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.0' }
 
-  s.swift_version = '5.0'
+  s.swift_versions = ['5.0', '6.0']
   s.platform = :ios, '10.0'
   s.requires_arc = true
 end

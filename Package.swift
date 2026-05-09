@@ -1,23 +1,26 @@
-// swift-tools-version:5.1
+// swift-tools-version: 6.0
 import PackageDescription
 
 let package = Package(
     name: "ProgressHUD",
     platforms: [
-        .iOS(.v13),
+        .iOS(.v13)
     ],
     products: [
         .library(
             name: "ProgressHUD",
             type: .static,
-            targets: ["ProgressHUD"]),
+            targets: ["ProgressHUD"]
+        )
     ],
     targets: [
         .target(
             name: "ProgressHUD",
-            dependencies: [],
-            path: "./ProgressHUD",
-            sources: ["Sources"]
-        ),
-    ]
+            path: "ProgressHUD/Sources",
+            resources: [
+                .process("images.xcassets")
+            ]
+        )
+    ],
+    swiftLanguageModes: [.v6]
 )

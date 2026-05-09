@@ -262,9 +262,46 @@ public extension ProgressHUD {
 public class ProgressHUD: UIView {
     
     private class var bundle: Bundle? {
-        let main = Bundle.main
+#if SWIFT_PACKAGE
+        return Bundle.module
+#else
         let module = "ProgressHUD"
-        return Bundle(path: main.bundlePath.appending("/Frameworks/\(module).framework/\(module).bundle"))
+        let main = Bundle.main
+        let frameworkBundle = Bundle(for: ProgressHUD.self)
+        let frameworkResourceURL = main.bundleURL
+            .appendingPathComponent("Frameworks")
+            .appendingPathComponent("\(module).framework")
+            .appendingPathComponent("\(module).bundle")
+        let candidateURLs = [
+            main.url(forResource: module, withExtension: "bundle"),
+            frameworkBundle.url(forResource: module, withExtension: "bundle"),
+            frameworkResourceURL
+        ]
+
+        // SwiftPM, CocoaPods 和手动集成的资源位置不同，这里按常见路径依次兜底查找。
+        for url in candidateURLs {
+            if let url, let bundle = Bundle(url: url) {
+                return bundle
+            }
+        }
+        return frameworkBundle
+#endif
+    }
+
+    private class func bundledImage(named name: String, fallbackSystemName: String) -> UIImage {
+        if let image = UIImage(named: name, in: bundle, compatibleWith: nil) {
+            return image
+        }
+        if let image = UIImage(named: name) {
+            return image
+        }
+        if #available(iOS 13.0, *), let image = UIImage(systemName: fallbackSystemName) {
+            NSLog("ProgressHUD: missing bundled image resource '%@', using system fallback.", name)
+            return image
+        }
+
+        NSLog("ProgressHUD: missing bundled image resource '%@'.", name)
+        return UIImage()
     }
     
     /// HUD的容器toolbar的样式
@@ -292,8 +329,8 @@ public class ProgressHUD: UIView {
 
     private var fontStatus = UIFont.systemFont(ofSize: 20)
 
-    private var imageSuccess = UIImage(named: "icon_status_success", in: ProgressHUD.bundle, compatibleWith: nil)!
-    private var imageError = UIImage(named: "icon_status_fail", in: ProgressHUD.bundle, compatibleWith: nil)!
+    private var imageSuccess = ProgressHUD.bundledImage(named: "icon_status_success", fallbackSystemName: "checkmark.circle.fill")
+    private var imageError = ProgressHUD.bundledImage(named: "icon_status_fail", fallbackSystemName: "xmark.circle.fill")
 
     private let keyboardWillShow = UIResponder.keyboardWillShowNotification
     private let keyboardWillHide = UIResponder.keyboardWillHideNotification
@@ -381,8 +418,10 @@ public class ProgressHUD: UIView {
         if hide {
             let text = labelStatus?.text ?? ""
             let delay = delay ?? Double(text.count) * 0.03 + 1.25
-            timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
-                self.dismissHUD()
+            timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.dismissHUD()
+                }
             }
         }
     }
@@ -575,7 +614,7 @@ public class ProgressHUD: UIView {
             labelStatus?.frame = rectLabel
             
             let centerX = width / 2
-            var centerY = edgeInsets.top + topViewType.size.height / 2
+            let centerY = edgeInsets.top + topViewType.size.height / 2
 
             viewProgress?.center = CGPoint(x: centerX, y: centerY)
             viewAnimation?.center = CGPoint(x: centerX, y: centerY)
@@ -588,7 +627,7 @@ public class ProgressHUD: UIView {
             height = topViewType.size.height + space * 2
             
             let centerX = width / 2
-            var centerY = height / 2
+            let centerY = height / 2
 
             viewProgress?.center = CGPoint(x: centerX, y: centerY)
             viewAnimation?.center = CGPoint(x: centerX, y: centerY)
